@@ -93,17 +93,150 @@ class TextRecognitionController extends GetxController {
 
 
   final picker = ImagePicker();
+  // Future<void> takePicture(ImageSource source) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: source);
+  //   if (pickedFile != null) {
+  //     File? croppedFile = await cropImage(File(pickedFile.path));
+  //     if (croppedFile != null) {
+  //       await processImage(croppedFile);
+  //     }
+  //   }
+  // }
   Future<void> takePicture(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
-    if (pickedFile != null) {
-      File? croppedFile = await cropImage(File(pickedFile.path));
-      if (croppedFile != null) {
-        await processImage(croppedFile);
-      }
+    final XFile? pickedFile = await picker.pickImage(source: source);
+    if (pickedFile == null) return;
+
+    isProcessing.value = true;
+    final File imageFile = File(pickedFile.path);
+
+    try {
+      // Extract text
+      await getRecognizer(pickedFile, true);
+
+      // Convert extracted text to JSON
+      final jsonOutput = parseInvoiceToJson(recognizedText.value);
+
+      print("Generated JSON: $jsonOutput");
+      print("Extracted Text: ${recognizedText.value}");
+
+    } catch (e) {
+      print('Error recognizing text: $e');
+    } finally {
+      isProcessing.value = false;
     }
   }
 
+  Future<void> getRecognizer(XFile img, bool? isList) async {
+    final selectedImage = InputImage.fromFilePath(img.path);
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    RecognizedText recognizedTexts = await textRecognizer.processImage(selectedImage);
+    await textRecognizer.close();
+
+    StringBuffer buffer = StringBuffer();
+    for (TextBlock block in recognizedTexts.blocks) {
+      for (TextLine line in block.lines) {
+        buffer.writeln(line.text.trim());
+      }
+    }
+
+    recognizedText.value = buffer.toString().trim();
+    print('Extracted Text:\n${recognizedText.value}');
+  }
+
+// ✅ Updated JSON extraction function
+  Map<String, dynamic> parseInvoiceToJson(String rawText) {
+    List<String> lines = rawText.split('\n');
+
+    String companyName = '';
+    String customerId = '';
+    String accessCode = '';
+    String invoiceNo = '';
+    String dueDate = '';
+    String customerNo = '';
+    List<Map<String, String>> items = [];
+
+    bool isItemSection = false;
+
+    for (String line in lines) {
+      line = line.trim();
+      if (line.isEmpty) continue;
+
+      // Extract header fields
+      if (line.contains("Company Name:")) {
+        companyName = extractValue(line);
+      } else if (line.contains("Customer #:")) {
+        customerId = extractValue(line);
+      } else if (line.contains("Access Code:")) {
+        accessCode = extractValue(line);
+      } else if (line.contains("Invoice #:")) {
+        invoiceNo = extractValue(line);
+      } else if (line.contains("Due Date:")) {
+        dueDate = extractValue(line);
+      }
+
+      // Start item extraction after the "Date" section header
+      if (line.toLowerCase().contains("date") && !isItemSection) {
+        isItemSection = true;
+        continue;
+      }
+
+      // Extract item details
+      if (isItemSection) {
+        List<String> words = line.split(RegExp(r'\s+')); // Split by spaces
+        if (words.isEmpty || words.length<4) continue;
+
+        // Validate date format (e.g., MM/DD/YY)
+        if (!RegExp(r'^\d{2}/\d{2}/\d{2}$').hasMatch(words[0])) continue;
+
+        // Extract data
+        String itemDate = words[0];
+        String itemDescription = words.sublist(1, words.length - 3).join(" "); // Combine all description words
+        String itemQty = words[words.length - 3];
+        String itemPrice = words[words.length - 2];
+        String itemTotal = words[words.length - 1];
+
+        // Add item to list
+        items.add({
+          'date': itemDate,
+          'description': itemDescription,
+          'qty': itemQty,
+          'price': itemPrice,
+          'total': itemTotal,
+        });
+
+        debugPrint("Extracted Item: $itemDate | $itemDescription | $itemQty | $itemPrice | $itemTotal");
+      }
+    }
+
+    return {
+      "customer_id": int.tryParse(customerId) ?? 0,
+      "access_code": int.tryParse(accessCode) ?? 0,
+      "invoice_no": int.tryParse(invoiceNo) ?? 0,
+      "due_date": dueDate,
+      "customer_no": int.tryParse(customerNo) ?? 0,
+      "company_name": companyName,
+      "items": items,
+    };
+  }
+
+
+
+
+// ✅ Helper function to extract values safely
+  String extractValue(String line) {
+    List<String> parts = line.split(":");
+    return parts.length > 1 ? parts.sublist(1).join(":").trim() : "";
+  }
+
+
+
+
+  /// Check if a string is a number
+  bool _isNumeric(String str) {
+    return double.tryParse(str) != null;
+  }
 
 
 

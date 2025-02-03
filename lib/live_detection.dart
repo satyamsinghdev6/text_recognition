@@ -6,6 +6,8 @@ import 'main.dart';
 import 'models/object_model.dart';
 
 class LiveDetection extends StatefulWidget {
+  const LiveDetection({super.key});
+
   @override
   _LiveDetectionState createState() => _LiveDetectionState();
 }
@@ -71,7 +73,7 @@ class _LiveDetectionState extends State<LiveDetection> {
     return Scaffold(
       body: _controller.value.isInitialized
           ? CameraPreview(_controller)
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }
