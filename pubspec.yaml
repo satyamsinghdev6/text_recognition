@@ -42,6 +42,7 @@ dependencies:
   camera:
   tflite_flutter: ^0.10.0
   ocr_scan_text:
+  permission_handler:
 #  tflite_flutter_helper:
 
 dev_dependencies:

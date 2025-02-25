@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class TextRecognitionController extends GetxController {
   var recognizedText = ''.obs;
@@ -25,6 +26,7 @@ class TextRecognitionController extends GetxController {
   void onInit() {
     super.onInit();
     textRecognizer = TextRecognizer();
+    Permission.camera.request();
   }
 
   @override
@@ -146,7 +148,7 @@ class TextRecognitionController extends GetxController {
   }
 
 // ✅ Updated JSON extraction function
-  Map<String, dynamic> parseInvoiceToJson(String rawText) {
+/*  Map<String, dynamic> parseInvoiceToJson(String rawText) {
     List<String> lines = rawText.split('\n');
 
     String companyName = '';
@@ -219,7 +221,48 @@ class TextRecognitionController extends GetxController {
       "company_name": companyName,
       "items": items,
     };
+  }*/
+
+  Map<String, dynamic> parseInvoiceToJson(String extractedText) {
+    Map<String, String> data = {};
+
+    // Improved regex to properly extract each field
+    data["shipper"] = _extractValue(extractedText, r"Shipper:\s*(.*?)(?=\nConsignee:|\nPort of Loading:)");
+    data["consignee"] = _extractValue(extractedText, r"Consignee:\s*(.*?)(?=\nNotify Party:|\nPort of Loading:)");
+    data["notify_party"] = _extractValue(extractedText, r"Notify Party:\s*(.*?)(?=\nPort of Loading:|\nMarks & Nos)");
+
+    data["port_of_loading"] = _extractValue(extractedText, r"Port of Loading:\s*(.*?)(?=\n)");
+    data["port_of_discharge"] = _extractValue(extractedText, r"Port of Discharge:\s*(.*?)(?=\n)");
+    data["number_of_packages"] = _extractValue(extractedText, r"(\d+)\s*PACKAGES");
+    data["container_details"] = _extractValue(extractedText, r"(\d+X\d+HC\s*CONTAINER)");
+    data["net_weight"] = _extractValue(extractedText, r"NET WEIGHT PER CNTR:\s*CNTR NO \S+\s*NET WEIGHT:\s*([\d,]+ KGS)");
+    data["description_of_goods"] = _extractGoods(extractedText).join(", ");
+
+    return data;
   }
+
+// Helper function to extract a single value using regex
+  String _extractValue(String text, String pattern) {
+    final match = RegExp(pattern, caseSensitive: false, dotAll: true).firstMatch(text);
+    return match != null ? match.group(1)!.replaceAll('\n', ' ').trim() : "N/A";
+  }
+
+
+
+// Helper function to extract a single value using regex
+
+
+
+
+  // Extract multiple goods descriptions as a list
+  List<String> _extractGoods(String text) {
+    final match = RegExp(r"Description of Goods:\s*([\s\S]*)", caseSensitive: false).firstMatch(text);
+    if (match != null) {
+      return match.group(1)!.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    }
+    return [];
+  }
+
 
 
 
