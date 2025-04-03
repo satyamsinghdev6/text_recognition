@@ -3,10 +3,12 @@ import 'package:text_reconigation_project/testing_page.dart';
 import 'package:camera/camera.dart';
 
 import 'live_detection.dart';
+import 'modules/screens/auth/views/introduction_screens.dart';
 
 late List<CameraDescription> cameras;
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
   runApp(const MyApp());
 }
@@ -23,7 +25,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:/*LiveDetection()??*/ TextRecognitionPage(),
+      // home:/*LiveDetection()??*/ TextRecognitionPage(),
+      home:/*LiveDetection()??*/ OCRIntroScreen(),
     );
   }
 }

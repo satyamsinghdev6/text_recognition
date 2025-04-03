@@ -40,7 +40,8 @@ dependencies:
   get: ^4.6.5
   image_cropper: ^4.0.1
   camera: ^0.11.0+2
-  tflite_flutter: ^0.10.0
+  smooth_page_indicator:
+#  tflite_flutter:
 #  tflite_flutter_helper:
 
 dev_dependencies:
@@ -66,8 +67,22 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
+    - lib/
+    - lib/core/
+    - lib/core/helpers/
+    - lib/core/helpers/widgets/
+    - lib/models/
+    - lib/values/
+    - lib/modules/
+    - lib/modules/screens/
+    - lib/modules/screens/auth/
+    - lib/modules/screens/auth/views/
+    - lib/modules/screens/auth/models/
+    - lib/modules/screens/auth/controllers/
+    - assets/
+    - assets/images/screen1.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

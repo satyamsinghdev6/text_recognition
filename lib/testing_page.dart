@@ -15,7 +15,7 @@ class TextRecognitionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Text Recognition')),
+      appBar: AppBar(title: const Text('Text Recognition')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -42,17 +42,17 @@ class TextRecognitionPage extends StatelessWidget {
             children: [
               Obx(() {
                 if (controller.isProcessing.value) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 return Text(
                   controller.recognizedText.value.isEmpty
                       ? "No text recognized"
                       : controller.recognizedText.value,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 );
               }),
           
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
           
               // Camera live recognition button
               ElevatedButton(
@@ -65,10 +65,10 @@ class TextRecognitionPage extends StatelessWidget {
                     Get.snackbar('Error', 'No camera found');
                   }
                 },
-                child: Text('Start Live Text Recognition'),
+                child: const Text('Start Live Text Recognition'),
               ),
           
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
             ],
           ),
@@ -80,11 +80,11 @@ class TextRecognitionPage extends StatelessWidget {
         children: [
           IconButton(onPressed: (){
             controller.takePicture(ImageSource.camera);
-          }, icon: Icon(Icons.camera,size: 35,)),
-          SizedBox(width: 23,),
+          }, icon: const Icon(Icons.camera,size: 35,)),
+          const SizedBox(width: 23,),
           IconButton(onPressed: (){
             controller.takePicture(ImageSource.gallery);
-          }, icon: Icon(Icons.photo,size: 35,)),
+          }, icon: const Icon(Icons.photo,size: 35,)),
         ],
       ),
     );
