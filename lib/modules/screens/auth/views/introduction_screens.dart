@@ -49,17 +49,17 @@ class _OCRIntroScreenState extends State<OCRIntroScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(introData[index]["image"]!, height: 300),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     introData[index]["title"]!,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       introData[index]["description"]!,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ],
@@ -74,7 +74,7 @@ class _OCRIntroScreenState extends State<OCRIntroScreen> {
               child: SmoothPageIndicator(
                 controller: _pageController,
                 count: introData.length,
-                effect: ExpandingDotsEffect(
+                effect: const ExpandingDotsEffect(
                   activeDotColor: Colors.blue,
                   dotHeight: 8,
                   dotWidth: 8,
@@ -89,7 +89,7 @@ class _OCRIntroScreenState extends State<OCRIntroScreen> {
               onPressed: () {
                 if (currentIndex < introData.length - 1) {
                   _pageController.nextPage(
-                      duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                      duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
                 } else {
                   Navigator.pushReplacementNamed(context, '/home');
                 }

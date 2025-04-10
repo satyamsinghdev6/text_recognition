@@ -23,7 +23,7 @@ class TextRecognitionPage extends StatelessWidget {
           margin: const EdgeInsets.all(16.0),
         width: double.infinity,
         alignment: Alignment.center,
-        height: 300,
+        // height: 300,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -55,18 +55,18 @@ class TextRecognitionPage extends StatelessWidget {
               const SizedBox(height: 20),
           
               // Camera live recognition button
-              ElevatedButton(
-                onPressed: () async {
-                  // Initialize camera and start live recognition
-                  // final cameras = await availableCameras();
-                  if (cameras.isNotEmpty) {
-                    controller.startLiveTextRecognition(cameras);
-                  } else {
-                    Get.snackbar('Error', 'No camera found');
-                  }
-                },
-                child: const Text('Start Live Text Recognition'),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     // Initialize camera and start live recognition
+              //     // final cameras = await availableCameras();
+              //     if (cameras.isNotEmpty) {
+              //       controller.startLiveTextRecognition(cameras);
+              //     } else {
+              //       Get.snackbar('Error', 'No camera found');
+              //     }
+              //   },
+              //   child: const Text('Start Live Text Recognition'),
+              // ),
           
               const SizedBox(height: 20),
 

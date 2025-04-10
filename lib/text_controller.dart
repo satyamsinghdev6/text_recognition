@@ -35,11 +35,11 @@ class TextRecognitionController extends GetxController {
   }
 
 
-  Future<void> startLiveTextRecognition(List<CameraDescription> cameras) async {
-    cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-    await cameraController!.initialize();
-    cameraController!.startImageStream(processCameraImage);
-  }
+  // Future<void> startLiveTextRecognition(List<CameraDescription> cameras) async {
+  //   cameraController = CameraController(cameras[0], ResolutionPreset.medium);
+  //   await cameraController!.initialize();
+  //   cameraController!.startImageStream(processCameraImage);
+  // }
 
   void processCameraImage(CameraImage image) async {
     if (isProcessing.value) return;
