@@ -3,12 +3,14 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:text_reconigation_project/generated/assets.dart';
 
 class OCRIntroScreen extends StatefulWidget {
+  const OCRIntroScreen({super.key});
+
   @override
   _OCRIntroScreenState createState() => _OCRIntroScreenState();
 }
 
 class _OCRIntroScreenState extends State<OCRIntroScreen> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int currentIndex = 0;
 
   List<Map<String, String>> introData = [
@@ -101,4 +103,6 @@ class _OCRIntroScreenState extends State<OCRIntroScreen> {
       ),
     );
   }
+
+
 }

@@ -97,13 +97,14 @@ class AwsTextractService {
         if (responseData.containsKey('extracted_data') &&
             responseData['extracted_data'] is Map) {
           final Map<String, dynamic> extractedMap =
-          Map<String, dynamic>.from(responseData['extracted_data']);
+              Map<String, dynamic>.from(responseData['extracted_data']);
 
           extractedText.value =
               const JsonEncoder.withIndent('  ').convert(extractedMap);
 
           // Optional: Navigate to display screen
-          final extractedMapString = extractedMap.map((key, value) => MapEntry(key, value.toString()));
+          final extractedMapString =
+              extractedMap.map((key, value) => MapEntry(key, value.toString()));
           Get.to(() => TextractResultView(extractedData: extractedMapString));
 
           print("✅ Key-value data extracted successfully");
@@ -119,10 +120,9 @@ class AwsTextractService {
       isLoading.value = false;
       print("❌ API Error: $e");
       toast("Something went wrong! Retrying...");
-      Future.delayed(Duration(seconds: 2), () => extractTextFromImage());
+      Future.delayed(const Duration(seconds: 2), () => extractTextFromImage());
     }
   }
-
 
   Map<String, String> _extractKeyValuePairs(List blocks) {
     final Map<String, dynamic> blockMap = {};
@@ -233,8 +233,6 @@ List<String> _extractGoods(String text) {
   return [];
 }
 
-
-
 class TextractResultView extends StatelessWidget {
   final Map<String, String> extractedData;
 
@@ -251,30 +249,30 @@ class TextractResultView extends StatelessWidget {
         child: extractedData.isEmpty
             ? const Center(child: Text('No data extracted'))
             : ListView.separated(
-          itemCount: extractedData.length,
-          separatorBuilder: (_, __) => const Divider(),
-          itemBuilder: (context, index) {
-            final key = extractedData.keys.elementAt(index);
-            final value = extractedData[key];
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    "$key:",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  flex: 5,
-                  child: Text(value ?? ""),
-                ),
-              ],
-            );
-          },
-        ),
+                itemCount: extractedData.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, index) {
+                  final key = extractedData.keys.elementAt(index);
+                  final value = extractedData[key];
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          "$key:",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 5,
+                        child: Text(value ?? ""),
+                      ),
+                    ],
+                  );
+                },
+              ),
       ),
     );
   }

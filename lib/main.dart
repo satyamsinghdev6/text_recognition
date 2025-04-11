@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:text_reconigation_project/testing_page.dart';
 import 'package:camera/camera.dart';
 
 import 'aws_views.dart';
-import 'live_detection.dart';
-import 'modules/screens/auth/views/introduction_screens.dart';
 
 late List<CameraDescription> cameras;
 

@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:text_reconigation_project/text_controller.dart';
 
-import 'main.dart';
 
 class TextRecognitionPage extends StatelessWidget {
   final TextRecognitionController controller = Get.put(TextRecognitionController());
